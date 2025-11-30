@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KH AND IVY Dreamy Subject Marks Calculator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>KH AND IVY Dreamy Subject Marks Calculator</h1>
+
+<div id="controls">
+    <button id="addButton" onclick="addSubject()">➕ Add Subject</button>
+    <button onclick="saveSubjects()">💾 Save</button>
+    <button onclick="sortSubjects()">↕ Sort Subjects</button>
+    <button onclick="exportPDF()">🖨️ Export PDF / Print</button>
+    <button class="theme-button" onclick="setTheme('pink')">🌸 Pink</button>
+    <button class="theme-button" onclick="setTheme('blue')">💧 Blue</button>
+    <button class="theme-button" onclick="setTheme('dark')">🌙 Night</button>
+</div>
+
+<div id="subjects"></div>
+
+<div id="overallResult"></div>
+
+<div id="colorLegend">
+    <div class="legend-item red">≤40</div>
+    <div class="legend-item yellow">41-50</div>
+    <div class="legend-item orange">51-60</div>
+    <div class="legend-item pink">61-70</div>
+    <div class="legend-item green">71-80</div>
+    <div class="legend-item blue">81-100</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
