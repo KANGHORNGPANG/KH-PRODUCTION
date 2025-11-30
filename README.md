@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KH AND IVY Dreamy Subject Marks Calculator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #d0f0fd, #b0e0ff, #a0d8ff);
+    margin: 0;
+    padding: 30px 20px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    transition: background 0.5s;
+}
+
+.particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255,105,180,0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,105,180,0.8);
+    animation: fall linear infinite;
+}
+
+@keyframes fall { 0% { transform: translateY(-10px); opacity: 0.9; } 100% { transform: translateY(110vh); opacity: 0; } }
+
+h1 {
+    text-align: center;
+    font-size: 2.6em;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ffb6c1, #ff69b4, #ffc0cb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 8px rgba(255,255,255,0.7);
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s all;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 5px;
+}
+
+button:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#subjects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.subject-box {
+    background: linear-gradient(145deg, #ffffffaa, #ffe6f0aa);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    position: relative;
+    border: 2px solid rgba(255,182,193,0.6);
+    transition: 0.3s;
+}
+
+.subject-box:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+
+.subject-box h3 { margin-top: 0; color: #2196f3; font-size: 1.3em; }
+
+input[type="text"], input[type="number"] {
+    padding: 6px 10px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    margin: 4px 6px 8px 0;
+    width: 80px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input[type="text"] { width: 180px; }
+
+input[type="number"]:focus, input[type="text"]:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 12px rgba(255,105,180,0.5);
+}
+
+.total { margin-top: 10px; font-weight: 600; font-size: 15px; }
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.delete-btn:hover { background: linear-gradient(135deg, #0288d1, #01579b); transform: scale(1.3); }
+
+#overallResult { text-align: center; font-size: 1.2em; font-weight: bold; margin-top: 20px; }
+
+#colorLegend {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.legend-item { padding: 5px 10px; border-radius: 10px; color: #fff; font-weight: bold; }
+.red { background:red; } .yellow { background:yellow; color:#000; } .orange { background:orange; }
+.pink { background:pink; color:#000; } .green { background:green; } .blue { background:blue; }
+
+.theme-button { padding: 6px 12px; border-radius: 15px; font-size:14px; }
+</style>
+</head>
+<body>
+
+<h1>KH AND IVY Dreamy Subject Marks Calculator</h1>
+
+<div id="controls">
+    <button id="addButton" onclick="addSubject()">➕ Add Subject</button>
+    <button onclick="saveSubjects()">💾 Save</button>
+    <button onclick="sortSubjects()">↕ Sort Subjects</button>
+    <button onclick="exportPDF()">🖨️ Export PDF / Print</button>
+    <button class="theme-button" onclick="setTheme('pink')">🌸 Pink</button>
+    <button class="theme-button" onclick="setTheme('blue')">💧 Blue</button>
+    <button class="theme-button" onclick="setTheme('dark')">🌙 Night</button>
+</div>
+
+<div id="subjects"></div>
+
+<div id="overallResult"></div>
+
+<div id="colorLegend">
+    <div class="legend-item red">≤40</div>
+    <div class="legend-item yellow">41-50</div>
+    <div class="legend-item orange">51-60</div>
+    <div class="legend-item pink">61-70</div>
+    <div class="legend-item green">71-80</div>
+    <div class="legend-item blue">81-100</div>
+</div>
+
+<script>
+let subjectCount = 0;
+let availableIds = [];
+
+function createParticles(count=40){
+    for(let i=0;i<count;i++){
+        const p = document.createElement('div');
+        p.className='particle';
+        p.style.left = Math.random()*100 + 'vw';
+        p.style.animationDuration = (5+Math.random()*5)+'s';
+        document.body.appendChild(p);
+    }
+}
+createParticles();
+
+function addSubject(savedData=null) {
+    let newId = availableIds.length > 0 ? availableIds.shift() : ++subjectCount;
+    const div = document.createElement('div');
+    div.className='subject-box';
+    div.id='subject'+newId;
+    let partsHTML='';
+    for(let i=1;i<=10;i++){
+        const val = savedData?savedData[`p${i}`]:'';
+        const t = savedData?savedData[`p${i}_total`]:'';
+        partsHTML += `Part ${i}: <input type="number" id="s${newId}_p${i}" value="${val}" oninput="calculate(${newId})"> /
+                      <input type="number" id="s${newId}_p${i}_total" value="${t}" oninput="calculate(${newId})"><br>`;
+    }
+    const nameVal = savedData?savedData.name:'';
+    div.innerHTML = `
+        <h3>Subject ${newId}</h3>
+        Name: <input type="text" id="name${newId}" placeholder="Subject name" value="${nameVal}"><br><br>
+        ${partsHTML}
+        <div class="total" id="total${newId}">Total: 0 / 0 (0%)</div>
+        <button class="delete-btn" onclick="deleteSubject(${newId})"><i class="fas fa-trash"></i></button>
+    `;
+    document.getElementById('subjects').appendChild(div);
+    calculate(newId);
+}
+
+function deleteSubject(id){
+    const box=document.getElementById('subject'+id);
+    if(box) box.remove();
+    availableIds.push(id);
+    availableIds.sort((a,b)=>a-b);
+    calculateOverall();
+}
+
+function calculate(id){
+    let total=0,max=0;
+    for(let i=1;i<=10;i++){
+        const val = Number(document.getElementById(`s${id}_p${i}`).value)||0;
+        const t = Number(document.getElementById(`s${id}_p${i}_total`).value)||0;
+        total += val; max+=t;
+    }
+    const percent=max?((total/max)*100).toFixed(2):0;
+    document.getElementById(`total${id}`).innerHTML=`Total: ${total} / ${max} (${percent}%)`;
+    calculateOverall();
+}
+
+function calculateOverall(){
+    let allTotal=0,allMax=0;
+    document.querySelectorAll('.subject-box').forEach(box=>{
+        const id = Number(box.id.replace("subject",""));
+        for(let i=1;i<=10;i++){
+            allTotal += Number(document.getElementById(`s${id}_p${i}`).value)||0;
+            allMax += Number(document.getElementById(`s${id}_p${i}_total`).value)||0;
+        }
+    });
+    const percent = allMax ? ((allTotal/allMax)*100).toFixed(2):0;
+    let status = percent>=40?"PASS ⭐":"FAIL ❌";
+    let color="black";
+    if(percent<=40) color="red";
+    else if(percent<=50) color="yellow";
+    else if(percent<=60) color="orange";
+    else if(percent<=70) color="pink";
+    else if(percent<=80) color="green";
+    else color="blue";
+    const overallDiv = document.getElementById("overallResult");
+    overallDiv.style.color=color;
+    overallDiv.innerHTML=`Total Score: ${allTotal} / ${allMax} | Average: ${percent}% | ${status}`;
+}
+
+function saveSubjects(){
+    const data=[];
+    document.querySelectorAll('.subject-box').forEach(box=>{
+        const i = Number(box.id.replace("subject",""));
+        const sub = {name:document.getElementById(`name${i}`).value};
+        for(let j=1;j<=10;j++){
+            sub[`p${j}`] = document.getElementById(`s${i}_p${j}`).value;
+            sub[`p${j}_total`] = document.getElementById(`s${i}_p${j}_total`).value;
+        }
+        data.push(sub);
+    });
+    localStorage.setItem('subjectsData',JSON.stringify(data));
+    alert("✅ Subjects saved!");
+}
+
+function sortSubjects(){
+    const container = document.getElementById('subjects');
+    const boxes = Array.from(container.children);
+    boxes.sort((a,b)=>{
+        const nameA = document.getElementById(`name${a.id.replace('subject','')}`).value.toUpperCase();
+        const nameB = document.getElementById(`name${b.id.replace('subject','')}`).value.toUpperCase();
+        return nameA.localeCompare(nameB);
+    });
+    boxes.forEach(box=>container.appendChild(box));
+}
+
+function exportPDF(){
+    window.print();
+}
+
+function setTheme(theme){
+    if(theme==="pink") document.body.style.background="linear-gradient(135deg, #ffd0e0, #ffc0cb, #ffb6c1)";
+    else if(theme==="blue") document.body.style.background="linear-gradient(135deg, #d0f0fd, #b0e0ff, #a0d8ff)";
+    else if(theme==="dark") document.body.style.background="#1e1e2f";
+}
+
+window.onload = function(){
+    const saved = JSON.parse(localStorage.getItem('subjectsData'))||[];
+    if(saved.length>0) saved.forEach(sub=>addSubject(sub));
+};
+</script>
+</body>
+</html>
